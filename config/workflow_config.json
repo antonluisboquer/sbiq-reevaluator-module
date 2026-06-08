@@ -1,0 +1,60 @@
+{
+  "phases": {
+    "INGESTION": {
+      "order": 1,
+      "steps": [0]
+    },
+    "EVALUATION": {
+      "order": 2,
+      "steps": [1]
+    },
+    "OUTPUT": {
+      "order": 3,
+      "steps": [2]
+    }
+  },
+  "steps": {
+    "STEP_00": {
+      "name": "Input Parser",
+      "description": "Parse the predicted-conditions final state and the manifest into structured state.",
+      "plan_file": "step_00_input_parser.md",
+      "substeps": [
+        { "id": "0.1", "name": "Parse predicted conditions", "tools": ["parse_predicted_conditions"] },
+        { "id": "0.2", "name": "Parse manifest", "tools": ["parse_manifest"] },
+        { "id": "0.3", "name": "Save step report", "tools": ["save_step_report"] }
+      ]
+    },
+    "STEP_01": {
+      "name": "Specification Evaluator",
+      "description": "For each document request, find matching manifest documents and evaluate which specifications are satisfied by the manifest data.",
+      "plan_file": "step_01_evaluate.md",
+      "substeps": [
+        { "id": "1.1", "name": "Evaluate all document requests against manifest", "tools": ["evaluate_specifications"] },
+        { "id": "1.2", "name": "Save step report", "tools": ["save_step_report"] }
+      ]
+    },
+    "STEP_02": {
+      "name": "Output Generator",
+      "description": "Generate the final reevaluated output with satisfied_specifications populated.",
+      "plan_file": "step_02_output.md",
+      "substeps": [
+        { "id": "2.1", "name": "Generate final output", "tools": ["generate_final_output"] },
+        { "id": "2.2", "name": "Save step report", "tools": ["save_step_report"] }
+      ]
+    }
+  },
+  "general_tools": [
+    "save_step_report",
+    "get_workflow_status"
+  ],
+  "middleware": {
+    "summarization": { "enabled": true },
+    "tool_filtering": { "enabled": true },
+    "plan_injection": { "enabled": true }
+  },
+  "dev_mode": {
+    "enabled": false,
+    "skip_steps": [],
+    "cutoff_step": null
+  }
+}

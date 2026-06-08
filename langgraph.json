@@ -1,0 +1,7 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "reevaluate-preconditions": "./agent.py:agent"
+  },
+  "env": ".env"
+}
